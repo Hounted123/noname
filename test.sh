@@ -110,7 +110,7 @@ echo interface=tap_soft >> /etc/dnsmasq.conf
 echo dhcp-range=tap_soft,192.168.7.0,192.168.7.254,12h >> /etc/dnsmasq.conf
 echo dhcp-option=tap_soft,3,192.168.7.1 >> /etc/dnsmasq.conf
 echo port=0 >> /etc/dnsmasq.conf
-echo dhcp-option=option:dns-server,8.8.8.8 >> /etc/dnsmasq.conf
+echo dhcp-option=option:dns-server,8.8.8.8,8.8.4.4 >> /etc/dnsmasq.conf
 echo net.ipv4.ip_forward = 1 >> /etc/sysctl.d/ipv4_forwarding.conf
 #
 sysctl --system
@@ -119,6 +119,7 @@ iptables -F -t nat
 #
 echo 1 > /proc/sys/net/ipv4/ip_forward
 #
+iptables -I INPUT -p udp --dport 40000 -j ACCEPT
 iptables -t nat -A POSTROUTING -s 192.168.7.0/24 -j SNAT --to-source ${HOST}
 #
 iptables-save > /etc/sysconfig/iptables
